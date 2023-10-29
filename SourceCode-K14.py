@@ -8,11 +8,18 @@ print('\n'+ 14*' '+'KELOMPOK 14 ')
 print(44*'='+'\n')
 
 # PERNYATAAN FUNGSI
-def menu(loop):     # Menu Program
-    # KAMUS
-    # pilihan : str
-    # loop    : bool
-    if loop:
+# KAMUS FUNGSI UMUM
+  # found       : bool  -> Handle pencarian elemen
+  # counter     : int   -> Penghitung
+  # buka        : bool  -> Handle pembukaan portal
+
+def menu(loop):                                     # Menu Program
+# KAMUS
+  # pilihan     : str   -> Input untuk mengakses percabangan simulasi
+  # loop        : bool  -> Perulangan Menu
+
+    # Tampilan Menu
+    if loop:        
         print()
         print(3*'='+' Menu Simulasi '+ 27*'=')
         print('Masuk  - Simulasi Kendaraan Masuk')
@@ -24,28 +31,26 @@ def menu(loop):     # Menu Program
         print()
         loop = False
     return  pilihan
-def kapasitas(N, active):   # Kapasitas Parkir
-    # KAMUS
-      # N            : int
-      # active       : list of str
-      # parkir_penuh : bool
+def kapasitas(N, aktif):                           # Kapasitas Parkir
+# KAMUS
+  # parkir_penuh : bool
     
     for i in range(N):
-        if '' not in active:
+        if '' not in aktif:
             parkir_penuh = True
         else:
             parkir_penuh = False
     return parkir_penuh
-def operasi_portal(buka):   # Mengendalikan buka-tutup palang
-    # KAMUS
-      # kendaraan_ada : bool
-      # ada           : str
-      # buka          : bool
+def operasi_portal(buka):                           # Mengendalikan buka-tutup palang
+# KAMUS
+  # kendaraan_ada : bool
+  # ada           : str
+
     kendaraan_ada = True
     if buka:
         print('\n'+11*'<'+11*'>'+'\nPortal terbuka')
         while kendaraan_ada:
-            ada = input()
+            ada = input('>> ')
             if ada == 'pergi':
                 kendaraan_ada = False
                 buka = False
@@ -53,168 +58,195 @@ def operasi_portal(buka):   # Mengendalikan buka-tutup palang
             else:
                 kendaraan_ada = True
     return kendaraan_ada, buka
+def daftar (ID):                                    # Pendaftaran ID
+# KAMUS
+  # new_id      : bool  -> Menyimpan ID baru untuk sementara
+  # hapus       : bool  -> Penanda jika ingin menghapus kartu
+
+# Antarmuka
+    print(3*'='+' Pendaftaran Kartu '+ 23*'=')
+    print('Hapus - Hapus kartu yang terdaftar')
+
+# Inisialisasi  
+    counter = 0
+
+# Input & Proses
+    if '' not in ID:
+        print('Error: Jumlah akun maksimum telah tercapai')
+    else:
+        new_id = input('\nMasukkan ID Baru >> ')
+    # Penghapusan ID
+    if new_id == 'hapus':
+        new_id = input('Masukkan ID yang akan dihapus >> ')
+        hapus = True
+    else:
+        hapus = False
+    if new_id in ID:
+        print('Error: ID sudah terdaftar')
+    # Memasukkan ID baru ke dalam list
+    for i in range(N*3):
+        if ID[i] == '' and counter < 1 and new_id not in ID and not hapus:
+            ID[i] = new_id
+            counter += 1
+            print('\n'+26*'-' + '\n' + f'ID : {ID[i]}\nID Berhasil Terdaftar' + '\n' + 26*'-')
+        elif hapus and ID[i] == new_id:
+            ID[i] = ''
+            counter += 1
+            print('\n'+26*'-' + '\n' + f'ID : {new_id}\nID Berhasil Terhapus' + '\n' + 26*'-')
+    return ID
+def masuk (parkir_penuh, ID, plat, aktif, waktu):  # Simulasi Kendaraan Masuk
+# KAMUS
+  # ulang_masuk : bool  -> Perulangan simulasi masuk
+  # kode_parkir : str
+  # waktu_masuk : str
+  # plat_no     : str
+
+    
+# Header
+    print(3*'='+' Simulasi Kendaraan Masuk '+ 16*'=')
+
+# Inisialisasi
+    found = False
+    counter = 0  
+    ulang_masuk = True
+    # Pesan jika parkir terisi penuh
+    if parkir_penuh:
+        print('\n'+22*'X' + '\n' + 'Parkir Terisi Penuh' + '\n' + 22*'X')
+    else:
+        # Antarmuka
+        print()
+        print(45*'-' + '\n' + '|' + 14*' ' + f'Selamat Datang!' + 14*' ' + '|' + '\n' + 45*'-')
+        print()
+
+# Input & Proses
+    # Scan ID
+    while ulang_masuk and not parkir_penuh:
+        kode_parkir = input('Masukkan Kode Kartu\nUID >> ')
+        if kode_parkir in aktif:
+            found = False
+            print('\nError : Kartu sedang aktif\n')
+        elif kode_parkir in ID and kode_parkir not in aktif:     # Mengecek UID terdaftar atau tidak
+            found = True
+            ulang_masuk = False
+        elif kode_parkir not in ID:     # Kode tidak terdaftar
+            print('\nError : Kartu tidak terdaftar\n')
+            found = False
+        if kode_parkir == 'menu':   # Kembali ke menu
+            ulang_masuk = False
+        
+            
+
+    # Melanjutkan proses jika ID terdaftar
+    if found and not parkir_penuh:
+        waktu_masuk = input('Waktu Masuk >> ')
+        plat_no = input('Plat Nomor >> ')
+        # Memasukkan data ke dalam list
+        for i in range(N):
+            if aktif[i] == '' and counter < 1:
+                aktif[i] = kode_parkir
+                waktu[i] = waktu_masuk
+                plat[i] = plat_no
+                counter += 1
+# Output
+        print()
+        print(22*'-' + '\n' + f'UID         : {kode_parkir}\nWaktu masuk : {waktu_masuk}\nPlat Nomor  : {plat_no}' + '\n' + 22*'-')
+        buka = True
+        operasi_portal(buka)
+
+    return aktif,waktu,plat
+def keluar (aktif,waktu,plat):                     # Simulasi Kendaraan Keluar
+# KAMUS
+  # ulang_keluar    :
+  # kode_parkir     :
+  # plat_no     
+
+# Antarmuka
+    print()
+    print(3*'='+' Simulasi Kendaraan Keluar '+ 15*'=')
+    print()
+
+# Inisialisasi
+    found = False
+    ulang_keluar = True
+
+# Input & Proses
+    while ulang_keluar:
+        kode_parkir = input('Masukkan kode kartu:\nUID >> ')
+        if kode_parkir == 'menu':    # Mengakhiri sub-simulasi
+            ulang_keluar = False
+        elif kode_parkir not in aktif:
+            print('\nError : Kode sedang tidak aktif\n')
+            buka = False
+        plat_no = input('Plat Nomor >>  ')
+        if plat_no == 'menu':    # Mengakhiri sub-simulasi
+            ulang_keluar = False
+        elif plat_no not in plat:   # Plat berbeda dengan ID yang sedang aktif
+            print('\nError : Plat nomor tidak sesuai\n')
+        # Menghapus data dari list
+        for i in range(N):
+            if kode_parkir in aktif and plat_no in plat:
+                aktif[i] = ''
+                waktu[i] = ''
+                plat[i] = ''
+                ulang_keluar = False
+                found = True
+# Output
+    if not ulang_keluar and found:
+        buka = True
+        operasi_portal(buka)
+        print(45*'-' + '\n' + '|' + 14*' ' + f'Selamat Jalan!' + 14*' ' + '|' + '\n' + 45*'-')
+    return aktif, waktu, plat
+
+
 
 # KODE UTAMA
 # KAMUS
-  # UMUM
-   # N           : int
-   # ID          : list of str
-   # active      : list of str
-   # waktu       : list of str
-   # jalan       : bool          -> Master simulasi 
-   # ke_menu     : bool          
-   # simulasi    : str           -> Handle percabangan simulasi
-   # counter     : int
+  # N           : int          -> Jumlah Kapasitas Parkir
+  # ID          : list of str
+  # aktif      : list of str
+  # waktu       : list of str
+  # plat        : list of str
+  # jalan       : bool          -> Master simulasi 
+  # ke_menu     : bool          
+  # simulasi    : str           -> Handle percabangan simulasi
 
-  # DAFTAR
-   # new_id      : str           -> Menyimpan ID baru sementara
-
-  # MASUK & KELUAR
-   # buka        : bool          -> Penanda terbukanya portal
-   # found       : bool          -> Keluar - mencari uid
-   # ulang_masuk : bool          -> Mengulang simulasi masuk
-   # waktu_masuk : str
-   # kode_parkir : str
-   # ulang_keluar: bool
   
-  
-  
-
-
-    
-
-N = int(input('Masukkan jumlah lahan parkir: '))
+N = int(input('Masukkan jumlah lahan parkir >> '))
 ID = ['' for i in range(N*3)]     # Menyimpan data UID yang terdaftar
-active = ['' for i in range(N)] # UID yang sedang aktif (parkir)
+aktif = ['' for i in range(N)] # UID yang sedang aktif (parkir)
 waktu = ['' for i in range(N)]  # Menyimpan waktu masuk
+plat = ['' for i in range(N)]
 jalan = True
 ke_menu = True    # Kembali ke menu jika True
 
 while jalan:
     simulasi = menu(ke_menu) 
-    parkir_penuh = kapasitas(N, active)
+    parkir_penuh = kapasitas(N, aktif)
 
     # Mendaftarkan Kartu Baru
     if simulasi == 'Daftar' or simulasi == 'daftar':
-        # Antarmuka
-        print(3*'='+' Pendaftaran Kartu '+ 23*'=')
-        print('Hapus - Hapus kartu yang terdaftar')
-        
-        counter = 0
-        if '' not in ID:
-            print('Error: Jumlah akun maksimum telah tercapai')
-        else:
-            new_id = input('\nMasukkan ID Baru: ')
-        if new_id == 'hapus':
-            new_id = input('Masukkan ID yang akan dihapus: ')
-            hapus = True
-        else:
-            hapus = False
-        if new_id in ID:
-            print('Error: ID sudah terdaftar')
-        for i in range(N*3):
-            if ID[i] == '' and counter < 1 and new_id not in ID and not hapus:
-                ID[i] = new_id
-                counter += 1
-                print('\n'+26*'-' + '\n' + f'ID : {ID[i]}\nID Berhasil Terdaftar' + '\n' + 26*'-')
-            elif hapus and ID[i] == new_id:
-                ID[i] = ''
-                counter += 1
-                print('\n'+26*'-' + '\n' + f'ID : {new_id}\nID Berhasil Terhapus' + '\n' + 26*'-')
-        # Reset Var
-        counter = 0
+        ID = daftar(ID)
   
     # Kendaraan Masuk
     elif simulasi == 'Masuk' or simulasi == 'masuk':
-        print(3*'='+' Simulasi Kendaraan Masuk '+ 16*'=')
-        # Reset Var
-        Found = False   
-        ulang_masuk = True
-
-        # Pesan jika parkir terisi penuh
-        if parkir_penuh:
-            print(22*'X' + '\n' + 'Parkir Terisi Penuh' + '\n' + 22*'X')
-        else:
-            # Header
-            print()
-            print(45*'-' + '\n' + '|' + 14*' ' + f'Selamat Datang!' + 14*' ' + '|' + '\n' + 45*'-')
-            print()
-        # Scan ID
-        while ulang_masuk and not parkir_penuh:
-            kode_parkir = input('Masukkan Kode Kartu & Waktu Masuk\nUID: ')
-            if kode_parkir in active:
-                found = False
-                print('Error : Kartu sedang aktif\n')
-            if kode_parkir in ID:     # Mengecek UID terdaftar atau tidak
-                found = True
-                ulang_masuk = False
-            elif kode_parkir not in ID:
-                found = False
-            
-            if kode_parkir == 'menu':   # Kembali ke menu
-                ulang_masuk = False
-            # Kode tidak terdaftar
-            if not found and ulang_masuk:
-                print('\nError : Kartu tidak terdaftar\n')
-
-        # Melanjutkan proses jika ID terdaftar
-        if found and not parkir_penuh:
-            waktu_masuk = input('Waktu Masuk: ')
-            for i in range(N):
-                if active[i] == '' and counter < 1:
-                    active[i] = kode_parkir
-                    waktu[i] = waktu_masuk
-                    counter += 1
-            print(22*'-' + '\n' + f'UID         : {kode_parkir}\nWaktu masuk : {waktu_masuk}' + '\n' + 22*'-')
-            buka = True
-            Found = False 
-            operasi_portal(buka)
-        # Reset Var
-        counter = 0  
-            
+        aktif, waktu, plat = masuk(parkir_penuh, ID, plat, aktif, waktu)
+          
     # Kendaraan Keluar
     elif simulasi == 'Keluar' or simulasi == 'keluar':
-        # Header
-        print()
-        print(3*'='+' Simulasi Kendaraan Keluar '+ 15*'=')
-        print()
-
-        found = False   # Reset Variabel
-        ulang_keluar = True
-        while ulang_keluar:
-            kode_parkir = input('Masukkan kode kartu:\nUID: ')
-            if kode_parkir == 'menu':    # Mengakhiri sub-simulasi
-                ulang_keluar = False
-            elif kode_parkir not in active:
-                print('\nError : Kode sedang tidak aktif\n')
-                buka = False
-            for i in range(N):
-                if kode_parkir in active:
-                    active[i] = ''
-                    waktu[i] = ''
-                    ulang_keluar = False
-                    found = True
-
-        if not ulang_keluar and found:
-            buka = True
-            operasi_portal(buka)
-            print(45*'-' + '\n' + '|' + 14*' ' + f'Selamat Jalan!' + 14*' ' + '|' + '\n' + 45*'-')
+       aktif, waktu, plat = keluar(aktif,waktu,plat)
         
     # Mengecek Status Array
     elif simulasi == 'cek' or simulasi == 'cek':
-        print(f'Data ID : {ID}\nAktif   : {active}\nWaktu   : {waktu}')
+        print('=== Data ====================================')
+        print(f'Data ID : {ID}\nAktif   : {aktif}\nWaktu   : {waktu}\nPlat No : {plat}')
         ke_menu = True
     
     # Menghentikan Simulasi
     elif simulasi == 'end' or simulasi == 'terminate' or simulasi == 'End' or simulasi == 'Terminate' :
         jalan = False
-
-    # Cek status variabel
-    elif simulasi == 'var' or kode_parkir == 'var' or waktu_masuk == 'var':
-        print(f'kode_parkir = {kode_parkir}\nbuka = {buka}\nfound = {found}\nulang_masuk = {ulang_masuk}\nke_menu = {ke_menu}')
     
     
-    else:   # simulasi terinput selain yang ditentukan
+    else:   # Input selain yang ditentukan
         print('Berikan input yang benar')
         ke_menu = True
 print('Simulasi dihentikan')
